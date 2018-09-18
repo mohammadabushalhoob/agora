@@ -4,10 +4,13 @@
     <% include ../static/partials/head.ejs %>
   </head>
   <body>
+    <% include ../static/partials/navbar.ejs %>
     <main class="container">
-      <% include ../static/partials/navbar.ejs %>
+      <% include ../static/partials/messages.ejs %>
 
       <h1>Topics</h1>
+
+      <a href="/topics/new" class="btn btn-success">New Topic</a>
 
       <ul class="list-group">
         <% topics.forEach((topic) => { %>
