@@ -186,4 +186,83 @@ describe('routes : comments', () => {
             });
         });
     }); // Member context end
+
+    // Non-owner context
+    describe('signed in user thats not an onwer performing CRUD actions for Comment', () => {
+        beforeEach((done) => {
+            request.get({ // mock authentication
+                url: 'http://localhost:3000/auth/fake',
+                form: {
+                    role: 'member',
+                    userId: 999,
+                    email: this.user.email
+                }
+            },
+                (err, res, body) => {
+                    done();
+                }
+            );
+        });
+
+        describe('POST /topics/:topicId/posts/:postId/comments/:id/destroy', () => {
+            it('should not delete the comment with the associated ID if member is not creator of comment', (done) => {
+                expect(this.comment).not.toBeNull();
+                request.post(
+                    `${base}${this.topic.id}/posts/${this.post.id}/comments/${this.comment.id}/destroy`,
+                    (err, res, body) => {
+                        Comment.findById(this.comment.id)
+                        .then((comment) => {
+                            expect(comment).not.toBeNull();
+                            expect(comment.body).toBe('ay caramba!!!!!');
+                            expect(res.statusCode).toBe(401);
+                            done();
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                            done();
+                        })
+                    }
+                );
+            });
+        });
+    }); // End of non-owner context
+
+    // Admin context
+    describe('signed in user that is an admin performing CRUD actions for Comment', () => {
+        beforeEach((done) => {
+            request.get({ // mock authentication
+                url: 'http://localhost:3000/auth/fake',
+                form: {
+                    role: 'admin',
+                    userId: 999,
+                    email: this.user.email
+                }
+            },
+                (err, res, body) => {
+                    done();
+                }
+            );
+        });
+
+        describe('POST /topics/:topicId/posts/:postId/comments/:id/destroy', () => {
+            it('should delete the comment with the associated ID if member is not owner but is admin', (done) => {
+                expect(this.comment).not.toBeNull();
+                request.post(
+                    `${base}${this.topic.id}/posts/${this.post.id}/comments/${this.comment.id}/destroy`,
+                    (err, res, body) => {
+                        Comment.findById(this.comment.id)
+                        .then((comment) => {
+                            expect(res.statusCode).toBe(302);
+                            expect(comment).toBeNull();
+                            done();
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                            done();
+                        })
+                    }
+                );
+            });
+        });
+    }); // End of admin context
 });
