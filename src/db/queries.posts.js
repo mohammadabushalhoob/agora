@@ -27,7 +27,6 @@ module.exports = {
     return Post.findById(req.params.id)
     .then((post) => {
       const authorized = new Authorizer(req.user, post).destroy();
-      console.log('this is the authorization withint queries.post deletePost', authorized);
       if(authorized){
         post.destroy()
         .then((res) => {

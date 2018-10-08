@@ -8,8 +8,6 @@ const Post = require('../../src/db/models').Post;
 const User = require('../../src/db/models').User;
 
 describe('routes : posts', () => {
-  let userMain;
-
   beforeEach((done) => {
     this.topic;
     this.post;
@@ -21,7 +19,6 @@ describe('routes : posts', () => {
       })
       .then((user) => {
         this.user = user;
-        userMain = user;
         Topic.create({
           title: 'Winter Games',
           description: 'Post your Winter Games stories.',
@@ -44,6 +41,86 @@ describe('routes : posts', () => {
       });
     });
   });
+
+  // Routes for Owner user
+  describe('owner user performing CRUD actions for Topic', () => {
+    beforeEach((done) => {    // before each suite in this context
+      request.get({           // mock authentication
+        url: "http://localhost:3000/auth/fake",
+        form: {
+          userId: this.user.id,
+          email: this.user.email,
+          passwor: this.user.password
+        }
+      },
+        (err, res, body) => {
+          done();
+        }
+      );
+    });
+
+    describe('GET /topics/:topicId/posts/:id/edit', () => {
+      it('should render a view with an edit post form', (done) => {
+        request.get(`${base}/${this.topic.id}/posts/${this.post.id}/edit`, (err, res, body) => {
+          expect(err).toBeNull();
+          expect(body).toContain('Edit Post');
+          expect(body).toContain('Snowball Fighting');
+          done();
+        });
+      });
+    });
+
+    describe('POST /topics/:topicId/posts/:id/update', () => {
+      it('should return a status code 302', (done) => {
+        request.post({
+          url: `${base}/${this.topic.id}/posts/${this.post.id}/update`,
+          form: {
+            title: 'Snowman Building Competition',
+            body: 'I love watching them melt slowly.'
+          }
+        }, (err, res, body) => {
+          expect(res.statusCode).toBe(302);
+          done();
+        });
+      });
+      it('should update the post with the given values', (done) => {
+        const options = {
+          url: `${base}/${this.topic.id}/posts/${this.post.id}/update`,
+          form: {
+            title: 'Snowman Building Competition',
+            body: 'So much snow!',
+            topicId: this.topic.id
+          }
+        };
+        request.post(options,
+          (err, res, body) => {
+            expect(err).toBeNull();
+            Post.findOne({
+              where: {id: this.post.id}
+            })
+            .then((post) => {
+              expect(post.title).toBe('Snowman Building Competition');
+              done();
+            });
+          }
+        );
+      });
+    });
+
+    describe('POST /topics/:topicId/posts/:id/destroy', () => {
+      it('should delete the post with the associated ID', (done) => {
+        expect(this.post.id).toBe(1);
+        request.post(`${base}/${this.topic.id}/posts/${this.post.id}/destroy`, (err, res, body) => {
+          Post.findById(1)
+          .then((post) => {
+            expect(err).toBeNull();
+            expect(post).toBeNull();
+            done();
+          })
+        });
+      });
+    });
+  }); // owner end
 
   // routes for admin users
   describe('admin user performing CRUD actions for Post', () => {
@@ -206,12 +283,11 @@ describe('routes : posts', () => {
   describe('member user performing CRUD actions for Post', () => {
     beforeEach((done) => {
       User.create({
-        email: 'admin@example.com',
+        email: 'member@example.com',
         password: '123456',
         role: 'member'
       })
       .then((user) => {
-        this.user = user;
         request.get({
           url: 'http://localhost:3000/auth/fake',
           form: {
@@ -347,91 +423,5 @@ describe('routes : posts', () => {
       });
     });
   }); // member user end
-
-  // Routes for Owner user
-  describe('owner user performing CRUD actions for Topic', () => {
-    beforeEach((done) => {
-      request.get({
-        url: 'http://localhost:3000/auth/fake',
-        form: {
-          role: userMain.role,
-          id: userMain.id,
-          emai: userMain.email
-        }
-      }, 
-        (err, res, body) => {
-          done();
-        }
-      );
-    });
-
-    describe('GET /topics/:topicId/posts/:id/edit', () => {
-      it('should render a view with an edit post form', (done) => {
-        console.log('THIS IS IN THE CONTEXT OF THE OWNER EDIT');
-        request.get(`${base}/${this.topic.id}/posts/${this.post.id}/edit`, (err, res, body) => {
-          expect(err).toBeNull();
-          expect(body).toContain('Edit Post');
-          expect(body).toContain('Snowball Fighting');
-          done();
-        });
-      });
-    });
-
-    describe('POST /topics/:topicId/posts/:id/update', () => {
-      it('should return a status code 302', (done) => {
-        console.log('THIS IS IN THE CONTEXT OF THE OWNER UPDATE');
-
-        request.post({
-          url: `${base}/${this.topic.id}/posts/${this.post.id}/update`,
-          form: {
-            title: 'Snowman Building Competition',
-            body: 'I love watching them melt slowly.'
-          }
-        }, (err, res, body) => {
-          expect(res.statusCode).toBe(302);
-          done();
-        });
-      });
-      it('should update the post with the given values', (done) => {
-        const options = {
-          url: `${base}/${this.topic.id}/posts/${this.post.id}/update`,
-          form: {
-            title: 'Snowman Building Competition',
-            body: 'So much snow!',
-            topicId: this.topic.id
-          }
-        };
-        request.post(options,
-          (err, res, body) => {
-            expect(err).toBeNull();
-            Post.findOne({
-              where: {id: this.post.id}
-            })
-            .then((post) => {
-              expect(post.title).toBe('Snowman Building Competition');
-              done();
-            });
-          }
-        );
-      });
-    });
-
-    describe('POST /topics/:topicId/posts/:id/destroy', () => {
-      it('should delete the post with the associated ID', (done) => {
-        console.log('THIS IS IN THE CONTEXT OF THE OWNER DESTROY');
-
-        expect(this.post.id).toBe(1);
-        request.post(`${base}/${this.topic.id}/posts/${this.post.id}/destroy`, (err, res, body) => {
-          Post.findById(1)
-          .then((post) => {
-            expect(err).not.toBeNull();
-            expect(post).toBeNull();
-            done();
-          })
-        });
-      });
-    });
-    
-  }); // owner end
 
 });
