@@ -46,6 +46,8 @@ module.exports = {
 
   destroy(req, res, next){
     postQueries.deletePost(req, (err, post) => {
+      console.log('this is the post withing postController destroy', post);
+      console.log('this is the user within postController destroy', req.user);
       if(err){
         res.redirect(500, `/topics/${req.params.topicId}/posts/${req.params.id}`);
       } else {
@@ -56,6 +58,8 @@ module.exports = {
 
   edit(req, res, next){
     postQueries.getPost(req.params.id, (err, post) => {
+      console.log('this is the post id within postController edit', post.userId);
+      console.log('this is the user within postController edit', req.user);
       if(err || post == null){
         res.redirect(404, '/');
       } else {

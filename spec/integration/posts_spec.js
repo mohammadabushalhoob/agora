@@ -8,6 +8,7 @@ const Post = require('../../src/db/models').Post;
 const User = require('../../src/db/models').User;
 
 describe('routes : posts', () => {
+  let userMain;
 
   beforeEach((done) => {
     this.topic;
@@ -20,6 +21,7 @@ describe('routes : posts', () => {
       })
       .then((user) => {
         this.user = user;
+        userMain = user;
         Topic.create({
           title: 'Winter Games',
           description: 'Post your Winter Games stories.',
@@ -203,16 +205,26 @@ describe('routes : posts', () => {
   // Routes for member users
   describe('member user performing CRUD actions for Post', () => {
     beforeEach((done) => {
-      request.get({
-        url: 'http://localhost:3000/auth/fake',
-        form: {
-          role: 'member'
-        }
-      }, 
-        (err, res, body) => {
-          done();
-        }
-      );
+      User.create({
+        email: 'admin@example.com',
+        password: '123456',
+        role: 'member'
+      })
+      .then((user) => {
+        this.user = user;
+        request.get({
+          url: 'http://localhost:3000/auth/fake',
+          form: {
+            role: user.role,
+            userId: user.id,
+            email: user.email
+          }
+        },
+          (err, res, body) => {
+            done();
+          }
+        );
+      });
     });
 
     describe('GET /topics/:topicId/posts/new', () => {
@@ -287,17 +299,14 @@ describe('routes : posts', () => {
   
     describe('POST /topics/:topicId/posts/:id/destroy', () => {
       it('should not delete the post with the associated ID', (done) => {
-        Post.all()
-        .then((posts) => {
-          const postCountBeforeDelete = posts.length;
-          expect(postCountBeforeDelete).toBe(1);
-          request.post(`${base}/${this.topic.id}/posts/${this.post.id}/destroy`, (err, res, body) => {
-            Post.all()
-            .then((posts) => {
-              expect(posts.length).toBe(postCountBeforeDelete);
-              done();
-            });
-          });
+        expect(this.post.id).toBe(1);
+        request.post(`${base}/${this.topic.id}/posts/${this.post.id}/destroy`, (err, res, body) => {
+          Post.findById(1)
+          .then((post) => {
+            expect(err).toBeNull();
+            expect(post).not.toBeNull();
+            done();
+          })
         });
       });
     });
@@ -345,7 +354,9 @@ describe('routes : posts', () => {
       request.get({
         url: 'http://localhost:3000/auth/fake',
         form: {
-          role: 'owner'
+          role: userMain.role,
+          id: userMain.id,
+          emai: userMain.email
         }
       }, 
         (err, res, body) => {
@@ -354,25 +365,9 @@ describe('routes : posts', () => {
       );
     });
 
-    // THIS.POST.USERID AND THIS.USER.ID ARE BOTH SAME BUT _ISADMIN() FUNCTION RETURNING FALSE
-
-    describe('POST /topics/:topicId/posts/:id/destroy', () => {
-      it('should delete the post with the associated ID', (done) => {
-        expect(this.post.id).toBe(1);
-        // console.log(this.post.userId, this.user.id);
-        request.post(`${base}/${this.topic.id}/posts/${this.post.id}/destroy`, (err, res, body) => {
-          Post.findById(1)
-          .then((post) => {
-            expect(err).toBeNull();
-            expect(post).toBeNull();
-            done();
-          });
-        });
-      });
-    });
-
     describe('GET /topics/:topicId/posts/:id/edit', () => {
       it('should render a view with an edit post form', (done) => {
+        console.log('THIS IS IN THE CONTEXT OF THE OWNER EDIT');
         request.get(`${base}/${this.topic.id}/posts/${this.post.id}/edit`, (err, res, body) => {
           expect(err).toBeNull();
           expect(body).toContain('Edit Post');
@@ -384,6 +379,8 @@ describe('routes : posts', () => {
 
     describe('POST /topics/:topicId/posts/:id/update', () => {
       it('should return a status code 302', (done) => {
+        console.log('THIS IS IN THE CONTEXT OF THE OWNER UPDATE');
+
         request.post({
           url: `${base}/${this.topic.id}/posts/${this.post.id}/update`,
           form: {
@@ -418,6 +415,23 @@ describe('routes : posts', () => {
         );
       });
     });
+
+    describe('POST /topics/:topicId/posts/:id/destroy', () => {
+      it('should delete the post with the associated ID', (done) => {
+        console.log('THIS IS IN THE CONTEXT OF THE OWNER DESTROY');
+
+        expect(this.post.id).toBe(1);
+        request.post(`${base}/${this.topic.id}/posts/${this.post.id}/destroy`, (err, res, body) => {
+          Post.findById(1)
+          .then((post) => {
+            expect(err).not.toBeNull();
+            expect(post).toBeNull();
+            done();
+          })
+        });
+      });
+    });
+    
   }); // owner end
 
 });
