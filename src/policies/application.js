@@ -5,7 +5,8 @@ module.exports = class ApplicationPolicy {
     }
 
     _isOwner(){
-        return this.record && (this.record.userId == this.user.id);
+        // THIS.RECORD.USERID AND THIS.USER.ID ARE DIFFERENT NUMBERS EVEN THOUGH THEY SHOULD BE THE SAME
+        return this.user && this.record && (this.record.userId == this.user.id);
     }
 
     _isAdmin(){
