@@ -11,7 +11,6 @@ describe("Vote", () => {
         this.user;
         this.topic;
         this.post;
-        this.vote;
         sequelize.sync({force: true}).then((res) => {
             User.create({
                 email: "starman@tesla.com",
@@ -63,6 +62,23 @@ describe("Vote", () => {
     // Suites begin here
     // Create
     describe('#create()', () => {
+        beforeEach((done) => {
+            this.vote;
+            Vote.create({
+                value: 1,
+                postId: this.post.id,
+                userId: this.user.id
+            })
+            .then((vote) => {
+                this.vote = vote;
+                done();
+            })
+            .catch((err) => {
+                console.log(err);
+                done();
+            })
+        });
+
         it('should create an upvote on a post for a user', (done) => {
             Vote.create({
                 value: 1,
@@ -81,7 +97,7 @@ describe("Vote", () => {
             });
         });
 
-        it('should create a downvote on a post fro a user', (done) => {
+        it('should create a downvote on a post for a user', (done) => {
             Vote.create({
                 value: -1,
                 postId: this.post.id,
@@ -112,6 +128,49 @@ describe("Vote", () => {
             .catch((err) => {
                 expect(err.message).toContain('Vote.userId cannot be null');
                 expect(err.message).toContain('Vote.postId cannot be null');
+                done();
+            });
+        });
+
+        it('should not create an vote with a value other than 1', (done) => {
+            Vote.create({
+                value: 2,
+                userId: this.user.id,
+                postId: this.post.id
+            })
+            .then((vote) => {
+                done();
+            })
+            .catch((err) => {
+                expect(err).not.toBeNull();
+                expect(err.message).toContain('Validation isIn on value failed');
+                done();
+            })
+        });
+
+        it('should not create a second vote with the same userId and postId', (done) => {
+            Vote.create({
+                value: -1,
+                userId: this.user.id,
+                postId: this.post.id
+            })
+            .then((vote) => {
+                expect(vote).not.toBeNull();
+                expect(vote.value).toBe(-1);
+                expect(vote.userId).toBe(this.user.id);
+                expect(vote.postId).toBe(this.post.id);
+                Vote.all()
+                .then((votes) => {
+                    console.log('these are the votes', votes);
+                    done();
+                })
+                .catch((err) => {
+                    console.log(err);
+                    done();
+                })
+            })
+            .catch((err) => {
+                console.log(err);
                 done();
             });
         });
@@ -223,5 +282,27 @@ describe("Vote", () => {
             });
         });
     }); // End Get Post
+
+    // Get Points
+    describe('#getPoints()', () => {
+        it('should return the total number of votes', (done) => {
+            Vote.create({           //create a vote on 'this.post'
+                value: 1,
+                postId: this.post.id,
+                userId: this.user.id
+            })
+            .then((vote) => {
+                vote.setPost(this.post)
+                .then((vote) => {
+                    console.log(this.post.votes);
+                    done();
+                })
+                .catch((err) => {
+                    console.log(err);
+                    done();
+                });
+            });
+        });
+    });
 
 });

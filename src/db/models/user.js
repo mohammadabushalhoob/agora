@@ -43,7 +43,7 @@ module.exports = (sequelize, DataTypes) => {
 
   User.prototype.isOwner = function(post) {
     return this.id == post.userId;
-  }
+  };
 
   return User;
 };
