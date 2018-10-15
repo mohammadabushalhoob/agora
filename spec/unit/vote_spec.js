@@ -147,33 +147,6 @@ describe("Vote", () => {
                 done();
             })
         });
-
-        it('should not create a second vote with the same userId and postId', (done) => {
-            Vote.create({
-                value: -1,
-                userId: this.user.id,
-                postId: this.post.id
-            })
-            .then((vote) => {
-                expect(vote).not.toBeNull();
-                expect(vote.value).toBe(-1);
-                expect(vote.userId).toBe(this.user.id);
-                expect(vote.postId).toBe(this.post.id);
-                Vote.all()
-                .then((votes) => {
-                    console.log('these are the votes', votes);
-                    done();
-                })
-                .catch((err) => {
-                    console.log(err);
-                    done();
-                })
-            })
-            .catch((err) => {
-                console.log(err);
-                done();
-            });
-        });
     }); // End Create
 
     // Set User
@@ -285,24 +258,99 @@ describe("Vote", () => {
 
     // Get Points
     describe('#getPoints()', () => {
-        it('should return the total number of votes', (done) => {
-            Vote.create({           //create a vote on 'this.post'
-                value: 1,
-                postId: this.post.id,
-                userId: this.user.id
+        it('should return the total value of votes', (done) => {
+            Post.create({
+                title: 'This is a post',
+                body: 'This is the post body',
+                userId: this.user.id,
+                topicId: this.topic.id,
+                votes: [{
+                    value: 1,
+                    userId: this.user.id
+                }]
+            }, {
+                include: {
+                    model: Vote,
+                    as: "votes"
+                }
             })
-            .then((vote) => {
-                vote.setPost(this.post)
-                .then((vote) => {
-                    console.log(this.post.votes);
-                    done();
-                })
-                .catch((err) => {
-                    console.log(err);
-                    done();
-                });
+            .then((post) => {
+                expect(post).not.toBeNull();
+                expect(post.getPoints()).toBe(1);
+                expect(post.votes.length).toBe(1);
+                done();
+            })
+            .catch((err) => {
+                console.log(err);
+                done();
+            })
+        });
+    }); // End Get Points
+
+    // Has Upvote For
+    describe('#hasUpvoteFor()', () => {
+        it('should return true when the current user has upvoted the post', (done) => {
+            Post.create({
+                title: 'This is a post',
+                body: 'This is the post body',
+                userId: this.user.id,
+                topicId: this.topic.id,
+                votes: [{
+                    value: 1,
+                    userId: this.user.id
+                }]
+            }, {
+                include: {
+                    model: Vote,
+                    as: "votes"
+                }
+            })
+            .then((post) => {
+                expect(post).not.toBeNull();
+                expect(post.votes.length).toBe(1);
+                expect(post.votes[0].userId).toBe(this.user.id);
+                expect(post.votes[0].value).toBe(1);
+                expect(post.hasUpvoteFor(this.user.id)).toBe(true);
+                done();
+            })
+            .catch((err) => {
+                console.log(err);
+                done();
             });
         });
-    });
+    }); // End Has Upvote For
+
+    // Has Downvote For
+    describe('#hasDownvoteFor()', () => {
+        it('should return true when the current user has downvoted the post', (done) => {
+            Post.create({
+                title: 'This is a post',
+                body: 'This is the post body',
+                userId: this.user.id,
+                topicId: this.topic.id,
+                votes: [{
+                    value: -1,
+                    userId: this.user.id
+                }]
+            }, {
+                include: {
+                    model: Vote,
+                    as: "votes"
+                }
+            })
+            .then((post) => {
+                expect(post).not.toBeNull();
+                expect(post.votes.length).toBe(1);
+                expect(post.votes[0].userId).toBe(this.user.id);
+                expect(post.votes[0].value).toBe(-1);
+                expect(post.hasDownvoteFor(this.user.id)).toBe(true);
+                done();
+            })
+            .catch((err) => {
+                console.log(err);
+                done();
+            });
+        });
+    }); // End Has Upvote For
 
 });
