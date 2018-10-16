@@ -4,19 +4,19 @@ module.exports = (sequelize, DataTypes) => {
     title: {
     type: DataTypes.STRING,
     allowNull: false
-  },
-  body: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  topicId: {
-    type: DataTypes.INTEGER,
-    allowNull: false
-  },
-  userId: {
-    type: DataTypes.INTEGER,
-    allowNull: false
-  }
+    },
+    body: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    topicId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    }
   }, {});
   Post.associate = function(models) {
     // associations can be defined here
@@ -70,6 +70,14 @@ module.exports = (sequelize, DataTypes) => {
   Post.prototype.getFavoriteFor = function(userId){
     return this.favorites.find((favorite) => { return favorite.userId == userId });
   };
+
+  Post.addScope('lastFiveFor', (userId) => {
+    return {
+      where: { userId: userId },
+      limit: 5,
+      order: [['createdAt', 'DESC']]
+    }
+  });
 
   return Post;
 };
