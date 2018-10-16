@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: 'member'
     }
-  });
+  }, {});
 
   User.associate = function(models) {
     // associations can be defined here
@@ -40,6 +40,7 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'userId',
       as: 'favorites'
     });
+
   };
 
   User.prototype.isAdmin = function() {
