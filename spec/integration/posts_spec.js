@@ -50,7 +50,7 @@ describe('routes : posts', () => {
         form: {
           userId: this.user.id,
           email: this.user.email,
-          passwor: this.user.password
+          password: this.user.password
         }
       },
         (err, res, body) => {
