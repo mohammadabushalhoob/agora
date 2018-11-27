@@ -21,6 +21,14 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'topicId',
       as: 'posts'
     });
+
+    Topic.addScope('lastFiveTopics', () => {
+      return {
+        limit: 5,
+        order: [['createdAt', 'DESC']]
+      }
+    });
   };
+
   return Topic;
 };

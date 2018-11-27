@@ -1,11 +1,17 @@
 const Topic = require('./models').Topic;
 const Post = require('./models').Post;
+const Comment = require('./models').Comment;
 const Authorizer = require('../policies/topic');
 
 module.exports = {
 
   getAllTopics(callback){
-    return Topic.all()
+    return Topic.all({
+      include:[{
+        model: Post,
+        as:'posts'
+      }]
+    })
     .then((topics) => {
       callback(null, topics);
     })
@@ -29,7 +35,11 @@ module.exports = {
     return Topic.findById(id, {
       include:[{
         model: Post,
-        as: 'posts'
+        as: 'posts',
+        include: [{
+          model: Comment,
+          as: 'comments'
+        }]
       }]
     })
     .then((topic) => {

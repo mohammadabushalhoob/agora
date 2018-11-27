@@ -8,19 +8,42 @@
     <main class="container">
       <% include ../static/partials/messages.ejs %>
 
-      <h1>Topics</h1>
+      <div class="container">
+        <div class="row text-center">
+          <div class="col-12">
+            <h1 class="display-1">Topics</h1>
+            <p class="lead">Click on any topic and join in on the discussion</p>
+          </div>
+        </div>
+      </div>
 
-      <% if(currentUser && currentUser.isAdmin()) { %>
-        <a href="/topics/new" class="btn btn-success">New Topic</a>
-      <% } %>
 
-      <ul class="list-group">
-        <% topics.forEach((topic) => { %>
-          <li class="list-group-item">
-            <a href="/topics/<%= topic.id %>"> <%= topic.title %> </a>
-          </li>
-        <% }) %>
-      </ul>
+        <% if(currentUser && currentUser.isAdmin()) { %>
+          <a href="/topics/new" class="btn btn-success">New Topic</a>
+        <% } %>
+
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <ul class="list-group">
+              <li class="list-group-item">
+                <span>Title</span>
+                <span class="float-right">Last Updated</span>
+              </li>
+              <% topics.forEach((topic) => { %>
+                <li class="list-group-item">
+                  <a href="/topics/<%= topic.id %>"><%= topic.title %></a>
+                  <span class="float-right">
+                    <%= topic.updatedAt.toString().substring(4, 15) %>
+                  </span>
+                  <div><small><%= topic.posts.length %> Posts</small></div>
+                </li>
+              <% }) %>
+            </ul>
+          </div>
+        </div>
+      </div>
+
     </main>
   </body>
 </html>
