@@ -6,11 +6,11 @@
   <body>
 
     <%include ../static/partials/navbar.ejs %>
+    <% include ../static/partials/messages.ejs %>
 
     <main class="container">
-      <% include ../static/partials/messages.ejs %>
 
-      <h1>Sign up</h1>
+      <h1 class="display-1">Sign up</h1>
 
       <form action="/users" method="post">
 
@@ -18,6 +18,12 @@
           <label for="email">Email</label>
           <input type="email" class="form-control" name="email" aria-describedby="emailHelp" placeholder="Enter email">
           <small class="text-muted" id="emailHelp">email address must be a valid address</small>
+        </div>
+
+        <div class="form-group">
+          <label for="img">Profile Image URL</label>
+          <input type="text" class="form-control" name="img" aria-describedby="imgHelp" placeholder="Enter Image URL">
+          <small class="text-muted" id="imgHelp">leave blank to use default image</small>
         </div>
 
         <div class="form-group">

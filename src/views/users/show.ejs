@@ -5,63 +5,72 @@
     </head>
     <body>
         <% include ../static/partials/navbar.ejs %>
+        <% include ../static/partials/messages.ejs %>
 
         <main class="container">
-
-            <% include ../static/partials/messages.ejs %>
-
-            <h1><%= `${user.email}'s profile` %></h1>
+            <div class="row">
+                <div class="col-8">
+                    <h1 class="display-4"><%= `${user.email}'s profile` %></h1>
+                    <p class="lead">Member Since: <%= user.createdAt.toString().substring(4, 15) %></p>
+                    <img src="<%= user.img %>" class="figure-img img-fluid rounded" alt="Profile Picture" style="height: 500px;">
+                </div>
+                <div class="col-4">
+                    <h1 class="display-4">Favorited Posts</h2>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <span>Title</span>
+                        </li>
+                        <% if(favoritePosts) { %>
+                            <% favoritePosts.forEach((fav) => { %>
+                                <li class="list-group-item">
+                                    <a href="/topics/<%= fav.post.topicId %>/posts/<%= fav.post.id %>">
+                                        <%= fav.post.title %>
+                                    </a>
+                                </li>
+                            <% }) %>
+                        <% } %>
+                    </ul>
+                </div>
+            </div>
 
             <hr>
 
-            <h2>Latest Posts</h2>
-
-            <ul class="list-unstyled">
-                <% if(posts) { %>
-                    <% posts.forEach((post) => { %>
-                        <li>
-                            <a href="/topics/<%= post.topicId %>/posts/<%= post.id %>">
-                                <%= post.title %>
-                            </a>
+            <div class="row">
+                <div class="col-6">
+                    <h2>Latest Posts</h2>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <span>Title</span>
+                            <span class="float-right">Last Updated</span>
                         </li>
-                    <% }) %>
-                <% } %>
-            </ul>
-            <hr>
-
-            <h2>Favorited Posts</h2>
-
-            <ul class="list-unstyled">
-                <% if(favoritePosts) { %>
-                    <% favoritePosts.forEach((fav) => { %>
-                        <li>
-                            <a href="/topics/<%= fav.post.topicId %>/posts/<%= fav.post.id %>">
-                                <%= fav.post.title %>
-                            </a>
-                        </li>
-                    <% }) %>
-                <% } %>
-            </ul>
-
-            <hr>
-
-            <h2>Latest Comments</h2>
-
-            <ul class="list-unstyled">
-
-                <% if(comments) { %>
-                    <% comments.forEach((comment) => { %>
-
-                        <li>
-                            <span>Post: </span><a href="/topics/<%= comment.Post.topicId %>/posts/<%= comment.Post.id %>">
-                                <%= comment.Post.title %>
-                            </a>
-                            <p>Comment: <%= comment.body %></p>
-                        </li>
-                        <hr>
-                    <% }) %>
-                <% } %>
-            </ul>
+                        <% if(posts) { %>
+                            <% posts.forEach((post) => { %>
+                                <li class="list-group-item">
+                                    <a href="/topics/<%= post.topicId %>/posts/<%= post.id %>">
+                                        <%= post.title %>
+                                    </a>
+                                </li>
+                            <% }) %>
+                        <% } %>
+                    </ul>
+                </div>
+                <div class="col-6">
+                    <h2>Latest Comments</h2>
+                    <ul class="list-group">
+                        <% if(comments) { %>
+                            <% comments.forEach((comment) => { %>
+                                <li class="list-group-item">
+                                    <span>Post: </span><a href="/topics/<%= comment.Post.topicId %>/posts/<%= comment.Post.id %>">
+                                        <%= comment.Post.title %>
+                                    </a>
+                                    <p>Comment: <%= comment.body %></p>
+                                </li>
+                                <hr>
+                            <% }) %>
+                        <% } %>
+                    </ul>
+                </div>
+            </div>
         </main>
 
     <% include ../static/partials/baseScripts.ejs %>
