@@ -10,11 +10,17 @@
     <% include ../static/partials/messages.ejs %>
 
     <!-- Jumbotron Header -->
-    <div class="jumbotron jumbotron-fluid">
-      <div class="container">
-        <h1 class='display-3'>Welcome to Bloccit</h1>
+    <div id="main-jumbotron" class="jumbotron jumbotron-fluid">
+      <div class="container-fluid">
+      <% if(!currentUser) { %>
+        <h1 class='display-3'>Welcome to Agora</h1>
         <p class='lead'>An application for users to share information.</p>
         <a href='/users/sign_up' class='btn btn-primary btn-lg'>Sign up</a>
+      <% } else { %>
+        <h1 class='display-3'>Welcome back <%= currentUser.email %>!</h1>
+        <p class='lead'>Check out our topics and start giving your 2 cents!</p>
+        <a href='/topics' class='btn btn-primary btn-lg'>View Topics</a>
+      <% } %>
       </div>
     </div>
 
@@ -22,7 +28,7 @@
     <main class='container-fluid'>
 
       <!-- Page Features -->
-      <section class='row text-center'>
+      <section id="page-features" class='row text-center'>
         <section class='col-lg-4'>
           <i class="fas fa-pen fa-7x"></i>
           <h4 class='card-title'>Post</h4>
@@ -52,7 +58,7 @@
       </section>
 
         <!-- Last Five Topics -->
-        <div class="container">
+        <div id="recent-topics" class="container-fluid">
           <h1 class="display-4">Most Recent Topics</h1>
           <div class="list-group">
             <% topics.forEach((topic) => { %>

@@ -19,7 +19,8 @@ module.exports = {
         title: req.body.title,
         body: req.body.body,
         topicId: req.params.topicId,
-        userId: req.user.id
+        userId: req.user.id,
+        img: req.body.img || null
       };
       postQueries.addPost(newPost, (err, post) => {
         if(err){

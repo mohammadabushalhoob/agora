@@ -5,38 +5,54 @@
   </head>
   <body>
     <% include ../static/partials/navbar.ejs %>
+    <% include ../static/partials/messages.ejs %>
 
-    <main class="container">
-      <% include ../static/partials/messages.ejs %>
-      <div style="display: flex; align-items:center;">
-        <% if(currentUser) { %>
-          <% include ../votes/voting.ejs %>
-        <% } %>
-        <h1><%= post.title %></h1>
+    <main class="container-fluid" id="post-show">
+      <div class="row">
+        <div class="col-9">
+          <div style="display: flex; align-items:center;">
+            <% if(currentUser) { %>
+              <% include ../votes/voting.ejs %>
+            <% } %>
+            <h1 class="display-4">
+              <%= post.title %>
+              <% if(currentUser) { %>
+                <span><% include ../favorites/favoriting.ejs %></span>
+              <% } %>
+            </h1>
+          </div>
+          <p class="lead" id="post-description"><%= post.body %></p>
+          <section id="comment-form">
+            <% if(currentUser) { %>
+              <% include ../comments/new.ejs %>
+            <% } %>
+          </section>
+          <section id="comment-list">
+            <small class="text-muted"><%= post.comments.length %> Comments</small>
+            <hr>
+            <% if(post.comments) { %>
+              <% post.comments.forEach((comment) => { %>
+                <%- include("../comments/show.ejs", {comment}) %>
+              <% }) %>
+            <% } %>
+          </section>
+        </div>
+        <div class="col-3">
+          <% if(post.img) { %>
+            <img src="<%= post.img %>" class="figure-img img-fluid rounded" alt="Post Profile Picture" style="height: 500px;">
+          <% } %>
+          <p class="lead">Topic: <a href="/topics/<%= post.Topic.id %>"><%= post.Topic.title %></p></a>
+          <p class="lead">Created At: <%= post.createdAt.toString().substring(4, 15) %></p>
+          <p class="lead">Last Updated: <%= post.updatedAt.toString().substring(4, 15) %></p>
+          <p class="lead">By: <%= post.User.email %></p>
+          <% if(currentUser && (currentUser.isAdmin() || currentUser.isOwner(post))) { %>
+            <a href="/topics/<%= post.topicId %>/posts/<%= post.id %>/edit" class="btn btn-warning">Edit</a>
+            <form style="display:initial" action="/topics/<%= post.topicId %>/posts/<%= post.id %>/destroy" method="post">
+              <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+          <% } %>
+        </div>
       </div>
-      <% if(currentUser && (currentUser.isAdmin() || currentUser.isOwner(post))) { %>
-        <a href="/topics/<%= post.topicId %>/posts/<%= post.id %>/edit" class="btn btn-warning">Edit</a>
-        <form style="display:initial" action="/topics/<%= post.topicId %>/posts/<%= post.id %>/destroy" method="post">
-          <button type="submit" class="btn btn-danger">Delete</button>
-        </form>
-      <% } %>
-      <% if(currentUser) { %>
-        <% include ../favorites/favoriting.ejs %>
-      <% } %>
-      <p><%= post.body %></p>
-      <section id="comment-form">
-        <% if(currentUser) { %>
-          <% include ../comments/new.ejs %>
-        <% } %>
-      </section>
-
-      <section id="comment-list">
-        <% if(post.comments) { %>
-          <% post.comments.forEach((comment) => { %>
-            <%- include("../comments/show.ejs", {comment}) %>
-          <% }) %>
-        <% } %>
-      </section>
     </main>
 
     <% include ../static/partials/baseScripts.ejs %>

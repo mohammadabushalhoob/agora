@@ -16,6 +16,10 @@ module.exports = (sequelize, DataTypes) => {
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false
+    },
+    img: {
+      type: DataTypes.STRING,
+      allowNull: true
     }
   }, {});
   Post.associate = function(models) {

@@ -7,37 +7,27 @@
     <% include ../static/partials/navbar.ejs %>
     <% include ../static/partials/messages.ejs %>
 
-    <main class="container">
-      <div class="row">
+    <main class="container-fluid">
+      <div id="topic-show-header" class="row text-center">
         <div class="col-12">
           <h1 class="display-1"><%= topic.title %></h1>
-          <p class="lead"><%= topic.description %></p>
-        </div>
-      </div>
-
-      <hr>
-
-      <div class="row">
-        <div class="col-12 text-center">
-          <h1 class="display-4">Posts</h1>
-          <p class="lead">Want to create a new post? Sign up or sign in and get started!</p>
-          <a class="btn btn-warning" href="#">Sign Up</a>
-          <a class="btn btn-warning" href="#">Sign In</a>
-          <% if(currentUser) { %>
-            <a href="/topics/<%= topic.id %>/posts/new" class="btn btn-success">New Post</a>
-            <% if(currentUser.isAdmin()) { %>
-              <a href="/topics/<%= topic.id %>/edit" class="btn btn-warning">Edit</a>
-              <form style="display:initial" action="/topics/<%= topic.id %>/destroy" method="post">
-                <button type="submit" class="btn btn-danger">Delete</button>
-              </form>
-            <% } %>
+          <% if(!currentUser) { %>
+            <p class="lead">Want to create a new post? Sign up or sign in and get started!</p>
+            <a class="btn btn-warning" href="#">Sign Up</a>
+            <a class="btn btn-warning" href="#">Sign In</a>
           <% } %>
         </div>
       </div>
-
       <div class="row">
-        <div class="col-12">
-          <ul class="list-group">
+        <div class="col-9">
+          <h1 id="topic-show-post-header" class="display-4">
+            Posts
+            <% if(currentUser) { %>
+              <span><a href="/topics/<%= topic.id %>/posts/new" class="btn btn-success">New Post</a></span>
+            <% } %>
+          </h1>
+          <small class="text-muted"><%= topic.posts.length %> Posts</small>
+          <ul id="topic-show-posts" class="list-group">
             <li class="list-group-item">
               <span>Title</span>
               <span class="float-right">Last Updated</span>
@@ -50,6 +40,24 @@
               </li>
             <% }) %>
           </ul>
+        </div>
+
+        <div class="col-3" style="border:1px solid #cecece;">
+          <% if(topic.img) { %>
+            <img src="<%= topic.img %>" class="figure-img img-fluid rounded" alt="Topic Profile Picture" style="height: 500px;">
+          <% } %>
+          <h4>Topic Details</h1>
+          <p class="">Created At: <%= topic.createdAt.toString().substring(4, 15) %></p>
+          <% if(topic.posts.length !== 0) { %>
+            <p class="">Last Post At: <%= topic.posts[topic.posts.length -1].updatedAt.toString().substring(4, 15) %></p>
+          <% } %>
+          <p class="">Description: <%= topic.description %></p>
+          <% if(currentUser && currentUser.role === 'admin') { %>
+            <a href="/topics/<%= topic.id %>/edit" class="btn btn-warning">Edit</a>
+            <form style="display:initial" action="/topics/<%= topic.id %>/destroy" method="post">
+              <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+          <% } %>
         </div>
       </div>
     </main>

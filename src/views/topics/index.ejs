@@ -9,18 +9,16 @@
       <% include ../static/partials/messages.ejs %>
 
       <div class="container">
-        <div class="row text-center">
+        <div id="topics-header" class="row text-center">
           <div class="col-12">
             <h1 class="display-1">Topics</h1>
             <p class="lead">Click on any topic and join in on the discussion</p>
+            <% if(currentUser && currentUser.isAdmin()) { %>
+              <a href="/topics/new" class="btn btn-success">New Topic</a>
+            <% } %>
           </div>
         </div>
       </div>
-
-
-        <% if(currentUser && currentUser.isAdmin()) { %>
-          <a href="/topics/new" class="btn btn-success">New Topic</a>
-        <% } %>
 
       <div class="container">
         <div class="row">
