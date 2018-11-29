@@ -1,3 +1,59 @@
 body {
   padding-top: 54px;
 }
+
+#main-jumbotron {
+  background-image: url('https://images.unsplash.com/photo-1536181783029-1097aaf179de?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=63e9afce2915c4f2d3b445ca68df31ac&auto=format&fit=crop&w=2252&q=80');
+  background-size: cover;
+  background-position-y: 75%;
+  color: white;
+}
+
+#main-jumbotron .container-fluid {
+  margin-left: 5%;
+}
+
+#page-features {
+  margin-top: 100px;
+}
+
+.card-title {
+  margin-top: 25px;
+}
+
+#recent-topics {
+  margin-top: 50px;
+  width: 90%;
+  margin-bottom: 50px;
+}
+
+#topics-header {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+#topic-show-header {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+#topic-show-posts {
+  margin-top: 50px;
+}
+
+#post-show {
+  margin-top: 50px;
+}
+
+#comment-form {
+  margin-top: 50px;
+}
+
+#comment-list {
+  margin-top: 100px;
+}
+
+#post-description {
+  margin-top: 10px;
+  margin-left: 50px;
+}

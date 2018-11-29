@@ -5,10 +5,10 @@
   </head>
   <body>
     <% include ../static/partials/navbar.ejs %>
+    <% include ../static/partials/messages.ejs %>
 
     <main class="container">
-      <% include ../static/partials/messages.ejs %>
-      <h1>Edit Topic</h1>
+      <h1 class="display-1">Edit Topic</h1>
 
       <form action="/topics/<%= topic.id %>/update" method="post">
         <div class="form-group">
@@ -18,6 +18,11 @@
         <div class="form-group">
           <label for="description">Description</label>
           <textarea rows="4" class="form-control" name="description" placeholder="Enter Description"><%= topic.description %></textarea>
+        </div>
+        <div class="form-group">
+          <label for="title">Profile Image URL</label>
+          <input value="<%= topic.img %>" type="text" class="form-control" name="img" aria-describedby="imgHelp" placeholder="May Leave Blank">
+          <small class="text-muted" id="imgHelp">enter url</small>
         </div>
         <button type="submit" class="btn btn-primary">Update</button>
       </form>
