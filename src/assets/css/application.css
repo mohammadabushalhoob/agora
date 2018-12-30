@@ -1,5 +1,10 @@
 body {
-  padding-top: 54px;
+  padding-top: 56px;
+  background-color: #dae0e6;
+}
+
+body main {
+  padding-top: 25px;
 }
 
 #main-jumbotron {
@@ -56,4 +61,34 @@ body {
 #post-description {
   margin-top: 10px;
   margin-left: 50px;
+}
+
+#signup-call-home .btn{
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+#signup-call-home .btn{
+  width: 100%;
+}
+
+#signin-form-home {
+  padding: 10px;
+  background-color: white;
+  margin-top: 30px;
+  border-radius: 5px;
+}
+
+#signin-form-home button {
+  width: 100%;
+}
+
+#logged-user-home-call .btn {
+  width: 100%;
+  margin: 5px 0;
+}
+
+#myTab {
+  margin-top: 25px;
+  border-radius: 5px;
 }
