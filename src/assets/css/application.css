@@ -63,6 +63,8 @@ body main {
   margin-left: 50px;
 }
 
+/* home */
+
 #signup-call-home .btn{
   width: 100%;
   margin-bottom: 10px;
@@ -91,4 +93,21 @@ body main {
 #myTab {
   margin-top: 25px;
   border-radius: 5px;
+}
+
+/* Signin */
+
+#signin {
+  max-width: 500px;
+  margin-top: 50px;
+}
+
+#signin-signup {
+  margin-top: 10px;
+}
+
+/* Signup */
+
+#signupForm {
+  max-width: 500px
 }
