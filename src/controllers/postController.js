@@ -1,5 +1,6 @@
 const postQueries = require('../db/queries.posts.js');
 const Authorizer = require('../policies/post');
+const userQueries = require('../db/queries.users.js');
 
 module.exports = {
   new(req, res, next){
@@ -40,7 +41,13 @@ module.exports = {
       if(err || post == null){
         res.redirect(404, '/');
       } else {
-        res.render('posts/show', {post});
+        if(req.user) {
+          userQueries.getUser(req.user.id, (err, result) => {
+            res.render('posts/show', {post, result});
+          })
+        } else {
+          res.render('posts/show', {post});
+        }
       }
     });
   },

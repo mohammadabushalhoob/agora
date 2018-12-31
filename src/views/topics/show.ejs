@@ -8,57 +8,271 @@
     <% include ../static/partials/messages.ejs %>
 
     <main class="container-fluid">
-      <div id="topic-show-header" class="row text-center">
-        <div class="col-12">
-          <h1 class="display-1"><%= topic.title %></h1>
-          <% if(!currentUser) { %>
-            <p class="lead">Want to create a new post? Sign up or sign in and get started!</p>
-            <a class="btn btn-warning" href="#">Sign Up</a>
-            <a class="btn btn-warning" href="#">Sign In</a>
-          <% } %>
-        </div>
-      </div>
       <div class="row">
-        <div class="col-9">
-          <h1 id="topic-show-post-header" class="display-4">
-            Posts
-            <% if(currentUser) { %>
-              <span><a href="/topics/<%= topic.id %>/posts/new" class="btn btn-success">New Post</a></span>
-            <% } %>
-          </h1>
-          <small class="text-muted"><%= topic.posts.length %> Posts</small>
-          <ul id="topic-show-posts" class="list-group">
-            <li class="list-group-item">
-              <span>Title</span>
-              <span class="float-right">Last Updated</span>
-            </li>
-            <% topic.posts.forEach((post) => { %>
-              <li class="list-group-item">
-                <a href="/topics/<%= topic.id %>/posts/<%= post.id %>"><%= post.title %></a>
-                <span class="float-right"><%= post.updatedAt.toString().substring(4, 15) %></span>
-                <div><small><%= post.comments.length %> Comments</small></div>
-              </li>
-            <% }) %>
-          </ul>
-        </div>
 
-        <div class="col-3" style="border:1px solid #cecece;">
-          <% if(topic.img) { %>
-            <img src="<%= topic.img %>" class="figure-img img-fluid rounded" alt="Topic Profile Picture" style="height: 500px;">
-          <% } %>
-          <h4>Topic Details</h1>
-          <p class="">Created At: <%= topic.createdAt.toString().substring(4, 15) %></p>
-          <% if(topic.posts.length !== 0) { %>
-            <p class="">Last Post At: <%= topic.posts[topic.posts.length -1].updatedAt.toString().substring(4, 15) %></p>
-          <% } %>
-          <p class="">Description: <%= topic.description %></p>
-          <% if(currentUser && currentUser.role === 'admin') { %>
-            <a href="/topics/<%= topic.id %>/edit" class="btn btn-warning">Edit</a>
-            <form style="display:initial" action="/topics/<%= topic.id %>/destroy" method="post">
-              <button type="submit" class="btn btn-danger">Delete</button>
-            </form>
+        <!-- MAIN START -->
+        <div class="col-lg-9 col-md-12">
+          <div class="row">
+            <div class="col-12">
+              <div style="display: flex; align-items:center;">
+                <h1 class="display-4">
+                  <%= topic.title %>
+                </h1>
+              </div>
+              <p class="lead" id="post-description"><%= topic.description %></p>
+            </div>
+          </div>
+
+          <!-- SIDEBAR SMALL START -->
+          <div class="col-12 d-md-block d-lg-none" style="margin-bottom:25px;">
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div id="signup-call-home" class="card-body">
+                    <% if(topic.img) { %>
+                      <img src="<%= topic.img %>" class="figure-img img-fluid rounded" alt="Topic Profile Picture" style="height: 500px;">
+                    <% } %>
+                    <p class="card-subtitle mb-2 text-muted text-center">Created At: <%= topic.createdAt.toString().substring(4, 15) %></p>
+                    <% if(topic.posts.length !== 0) { %>
+                      <p class="card-subtitle mb-2 text-muted text-center">Last Post At: <%= topic.posts[topic.posts.length -1].updatedAt.toString().substring(4, 15) %></p>
+                    <% } %>
+                    <% if(currentUser) { %>
+                      <a class="btn btn-primary" href="/users/<%= currentUser.id %>">View my profile</a>
+                      <span><a href="/topics/<%= topic.id %>/posts/new" class="btn btn-success">New Post</a></span>
+                      <% if(currentUser.role === 'admin') { %>
+                        <a href="/topics/<%= topic.id %>/edit" class="btn btn-warning">Edit</a>
+                        <form style="display:initial" action="/topics/<%= topic.id %>/destroy" method="post">
+                          <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                      <% } %>
+                    <% } else { %>
+                      <!-- Button trigger modal -->
+                      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#smallSignup">
+                        Join Agora to create a post
+                      </button>
+                      <!-- Modal -->
+                      <div class="modal fade" id="smallSignup" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLongTitle">Sign up</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <form id="signup-form" action="/users" method="POST">
+                                <div class="form-group">
+                                  <label for="email">Email</label>
+                                  <input type="email" name="email" placeholder="you@example.com" class="form-control"/>
+                                  <small class="text-muted" id="titleHelp">email must be valid.</small>
+                                </div>
+                                <div class="form-group">
+                                  <label for="password">Password</label>
+                                  <input type="password" name="password" placeholder="Create a password" class="form-control"/>
+                                  <small class="text-muted" id="passwordHelp">password must be 6 or more characters in length.</small>
+                                </div>
+                                <div class="form-group">
+                                  <label for="password_conf">Password Confirmation</label>
+                                  <input type="password" name="password_conf" placeholder="Re-enter your password" class="form-control"/>
+                                  <small class="text-muted" id="password_confHelp">enter the password again.</small>
+                                </div>
+                                <button type="submit" class="btn btn-success" style="width:100%">Sign up for Agora</button>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Button trigger signin -->
+                      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#login">
+                        Login
+                      </button>
+                      <!-- Modal signin -->
+                      <div class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLongTitle">Login</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <form id="signup-form" action="/users/sign_in" method="post">
+                                <div class="form-group">
+                                  <label for="email">Email</label>
+                                  <input type="email" class="form-control" name="email" aria-describedby="emailHelp" placeholder="Enter email">
+                                </div>
+                                <div class="form-group">
+                                  <label for="password">Password</label>
+                                  <input type="password" class="form-control" name="password" aria-describedby="passwordHelp" placeholder="Enter password">
+                                </div>
+                                <button type="submit" class="btn btn-success">Login</button>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    <% } %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- SIDEBAR SMALL END -->
+
+          <div class="row">
+            <div class="col-12">
+              <ul id="topic-show-posts" class="list-group">
+                <p class="mb-2 text-muted"><%= topic.posts.length %> Posts</small>
+                <li class="list-group-item">
+                  <span>Title</span>
+                  <span class="float-right">Last Updated</span>
+                </li>
+                <% topic.posts.forEach((post) => { %>
+                  <li class="list-group-item">
+                    <a href="/topics/<%= topic.id %>/posts/<%= post.id %>"><%= post.title %></a>
+                    <span class="float-right"><%= post.updatedAt.toString().substring(4, 15) %></span>
+                    <div><small><%= post.comments.length %> Comments</small></div>
+                  </li>
+                <% }) %>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- MAIN END -->
+
+        <!-- SIDEBAR START -->
+        <div class="col-3 d-none d-lg-block">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div id="signup-call-home" class="card-body">
+                  <% if(topic.img) { %>
+                    <img src="<%= topic.img %>" class="figure-img img-fluid rounded" alt="Topic Profile Picture" style="height: 500px;">
+                  <% } %>
+                  <p class="card-subtitle mb-2 text-muted text-center">Created At: <%= topic.createdAt.toString().substring(4, 15) %></p>
+                  <% if(topic.posts.length !== 0) { %>
+                    <p class="card-subtitle mb-2 text-muted text-center">Last Post At: <%= topic.posts[topic.posts.length -1].updatedAt.toString().substring(4, 15) %></p>
+                  <% } %>
+                  <% if(currentUser) { %>
+                    <span><a href="/topics/<%= topic.id %>/posts/new" class="btn btn-success">New Post</a></span>
+                    <% if(currentUser.role === 'admin') { %>
+                      <a href="/topics/<%= topic.id %>/edit" class="btn btn-warning">Edit</a>
+                      <form style="display:initial" action="/topics/<%= topic.id %>/destroy" method="post">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                      </form>
+                    <% } %>
+                  <% } else { %>
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#signup">
+                      Join Agora to create a post
+                    </button>
+                    <!-- Modal -->
+                    <div class="modal fade" id="signup" tabindex="-1" role="dialog" aria-labelledby="signup" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Sign up</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <form id="signup-form" action="/users" method="POST">
+                              <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" name="email" placeholder="you@example.com" class="form-control"/>
+                                <small class="text-muted" id="titleHelp">email must be valid.</small>
+                              </div>
+                              <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" name="password" placeholder="Create a password" class="form-control"/>
+                                <small class="text-muted" id="passwordHelp">password must be 6 or more characters in length.</small>
+                              </div>
+                              <div class="form-group">
+                                <label for="password_conf">Password Confirmation</label>
+                                <input type="password" name="password_conf" placeholder="Re-enter your password" class="form-control"/>
+                                <small class="text-muted" id="password_confHelp">enter the password again.</small>
+                              </div>
+                              <button type="submit" class="btn btn-success" style="width:100%">Sign up for Agora</button>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  <% } %>
+                </div>
+              </div>
+            </div>
+          </div>
+          <% if(!currentUser) { %>
+            <div class="row">
+              <div class="col-12">
+                <form id="signin-form-home" action="/users/sign_in" method="post">
+                  <div class="form-group">
+                    <input type="email" class="form-control" name="email" aria-describedby="emailHelp" placeholder="Enter email">
+                  </div>
+                  <div class="form-group">
+                    <input type="password" class="form-control" name="password" aria-describedby="passwordHelp" placeholder="Enter password">
+                  </div>
+                  <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+              </div>
+            </div>
+          <% } else { %>
+            <div class="row">
+              <div class="col-12">
+                <ul class="nav nav-tabs" id="myTab" role="tablist" style="background-color: white;">
+                  <li class="nav-item">
+                    <a class="nav-link active" id="favorites-tab" data-toggle="tab" href="#favorites" role="tab" aria-controls="favorites" aria-selected="true">My Favorites</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="posts-tab" data-toggle="tab" href="#posts" role="tab" aria-controls="posts" aria-selected="false">My Posts</a>
+                  </li>
+                </ul>
+                <div class="tab-content" id="myTabContent" style="background-color:white;">
+                  <div class="tab-pane fade show active" id="favorites" role="tabpanel" aria-labelledby="favorites-tab">
+                    <ul class="list-group">
+                      <% if(result.favoritePosts.length !== 0) { %>
+                        <% result.favoritePosts.forEach((fav) => { %>
+                            <li class="list-group-item">
+                              <a href="/topics/<%= fav.post.topicId %>/posts/<%= fav.post.id %>">
+                                <%= fav.post.title %>
+                              </a>
+                            </li>
+                        <% }) %>
+                      <% } else { %>
+                        <li class="list-group-item">
+                          <p>Nothing here...</p>
+                        </li>
+                      <% } %>
+                    </ul>
+                  </div>
+                  <div class="tab-pane fade" id="posts" role="tabpanel" aria-labelledby="posts-tab">
+                    <ul class="list-group">
+                      <% if(result.posts.length !== 0) { %>
+                        <% result.posts.forEach((post) => { %>
+                            <li class="list-group-item">
+                              <a href="/topics/<%= post.topicId %>/posts/<%= post.id %>">
+                                <%= post.title %>
+                              </a>
+                            </li>
+                        <% }) %>
+                      <% } else { %>
+                        <li class="list-group-item">
+                          <p>Nothing here...</p>
+                        </li>
+                      <% } %>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
           <% } %>
         </div>
+        <!-- SIDEBAR END -->
+
       </div>
     </main>
 

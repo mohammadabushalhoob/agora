@@ -57,6 +57,107 @@
 
       <main class="container-fluid">
         <div class="row">
+
+          <!-- SIDEBAR SMALL START -->
+          <div class="col-12 d-md-block d-lg-none" style="margin-bottom: 25px;">
+            <% if(!currentUser) { %>
+              <div class="row">
+                <div class="col-12">
+                  <div class="card">
+                    <div id="signup-call-home" class="card-body">
+                      <h5 class="card-title text-center">Welcome to Agora!</h5>
+                      <h6 class="card-subtitle mb-2 text-muted text-center">An application for users to share information.</h6>
+                      <p class="card-text text-center">Sign up now to join our community and get access to the web's largest forum for discussion on various topics.</p>
+                      <!-- Button trigger signup -->
+                      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#smallSignup">
+                        Join Agora
+                      </button>
+                      <!-- Modal signup -->
+                      <div class="modal fade" id="smallSignup" tabindex="-1" role="dialog" aria-labelledby="smallSignup" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLongTitle">Sign up</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <form id="signup-form" action="/users" method="POST">
+                                <div class="form-group">
+                                  <label for="email">Email</label>
+                                  <input type="email" name="email" placeholder="you@example.com" class="form-control"/>
+                                  <small class="text-muted" id="titleHelp">email must be valid.</small>
+                                </div>
+                                <div class="form-group">
+                                  <label for="password">Password</label>
+                                  <input type="password" name="password" placeholder="Create a password" class="form-control"/>
+                                  <small class="text-muted" id="passwordHelp">password must be 6 or more characters in length.</small>
+                                </div>
+                                <div class="form-group">
+                                  <label for="password_conf">Password Confirmation</label>
+                                  <input type="password" name="password_conf" placeholder="Re-enter your password" class="form-control"/>
+                                  <small class="text-muted" id="password_confHelp">enter the password again.</small>
+                                </div>
+                                <button type="submit" class="btn btn-success" style="width:100%">Sign up for Agora</button>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Button trigger signin -->
+                      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#login">
+                        Login
+                      </button>
+                      <!-- Modal signin -->
+                      <div class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLongTitle">Login</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <form id="signup-form" action="/users/sign_in" method="post">
+                                <div class="form-group">
+                                  <label for="email">Email</label>
+                                  <input type="email" class="form-control" name="email" aria-describedby="emailHelp" placeholder="Enter email">
+                                </div>
+                                <div class="form-group">
+                                  <label for="password">Password</label>
+                                  <input type="password" class="form-control" name="password" aria-describedby="passwordHelp" placeholder="Enter password">
+                                </div>
+                                <button type="submit" class="btn btn-success">Login</button>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <a class="btn btn-primary" href="/topics">See all avaliable topics</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% } else { %>
+              <div class="row">
+                <div class="col-12">
+                  <div id="logged-user-home-call" class="card text-center">
+                    <div class="card-body">
+                      <h5 class="card-title">Welcome back, <%= currentUser.email %>!</h5>
+                      <a class="btn btn-primary" href="/topics/new">Start a new topic</a>
+                      <a class="btn btn-primary" href="/topics">See all avaliable topics</a>
+                      <a class="btn btn-primary" href="/users/<%= currentUser.id %>">View my profile</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% } %>
+          </div>
+          <!-- SIDEBAR SMALL END -->
+
+          <!-- MAIN START -->
           <div class="col-lg-9 col-md-12">
             <div class="list-group">
               <% posts.forEach((post) => { %>
@@ -86,21 +187,24 @@
               <% }) %>
             </div>
           </div>
+          <!-- MAIN END -->
+
+          <!-- SIDEBAR START -->
           <div class="col-3 d-none d-lg-block">
             <% if(!currentUser) { %>
               <div class="row">
                 <div class="col-12">
                   <div class="card">
                     <div id="signup-call-home" class="card-body">
-                      <h5 class="card-title">Welcome to Agora!</h5>
-                      <h6 class="card-subtitle mb-2 text-muted">An application for users to share information.</h6>
-                      <p class="card-text">Sign up now to join our community and get access to the web's largest forum for discussion on various topics.</p>
+                      <h5 class="card-title text-center">Welcome to Agora!</h5>
+                      <h6 class="card-subtitle mb-2 text-muted text-center">An application for users to share information.</h6>
+                      <p class="card-text text-center">Sign up now to join our community and get access to the web's largest forum for discussion on various topics.</p>
                       <!-- Button trigger modal -->
-                      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+                      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#signup">
                         Join Agora
                       </button>
                       <!-- Modal -->
-                      <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                      <div class="modal fade" id="signup" tabindex="-1" role="dialog" aria-labelledby="signup" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered" role="document">
                           <div class="modal-content">
                             <div class="modal-header">
@@ -166,10 +270,10 @@
                 <div class="col-12">
                   <ul class="nav nav-tabs" id="myTab" role="tablist" style="background-color: white;">
                     <li class="nav-item">
-                      <a class="nav-link active" id="favorites-tab" data-toggle="tab" href="#favorites" role="tab" aria-controls="favorites" aria-selected="true">Favorites</a>
+                      <a class="nav-link active" id="favorites-tab" data-toggle="tab" href="#favorites" role="tab" aria-controls="favorites" aria-selected="true">My Favorites</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" id="posts-tab" data-toggle="tab" href="#posts" role="tab" aria-controls="posts" aria-selected="false">Posts</a>
+                      <a class="nav-link" id="posts-tab" data-toggle="tab" href="#posts" role="tab" aria-controls="posts" aria-selected="false">My Posts</a>
                     </li>
                   </ul>
                   <div class="tab-content" id="myTabContent" style="background-color:white;">
@@ -212,6 +316,8 @@
               </div>
             <% } %>
           </div>
+          <!-- SIDEBAR END -->
+
         </div>
       </main>
 

@@ -4,7 +4,7 @@
             <%= comment.body %>
         </p>
         <small class="card-subtitle mb-2 text-muted">
-            sent by <%= comment.User.email %> on <%= comment.createdAt %>
+            sent by <a href="/users/<%= comment.User.id %>"><%= comment.User.email %></a> on <%= comment.createdAt %>
         </small>
 
         <% if(currentUser && (currentUser.id === comment.userId || currentUser.isAdmin())) { %>
