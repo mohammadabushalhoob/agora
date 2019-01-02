@@ -100,18 +100,18 @@
                 </div>
               </div>
             <% } else { %>
-              <a class="btn btn-primary" href="/users/<%= currentUser.id %>">View my profile</a>
-              <% if(currentUser.isAdmin()) { %>
-                <div class="row">
-                  <div class="col-12">
-                    <div class="card text-center">
-                      <div class="card-body">
+              <div class="row">
+                <div class="col-12">
+                  <div class="card text-center">
+                    <div class="card-body">
+                      <a class="btn btn-primary" href="/users/<%= currentUser.id %>">View my profile</a>
+                        <% if(currentUser.isAdmin()) { %>
                           <a href="/topics/new" class="btn btn-success">New Topic</a>
-                      </div>
+                        <% } %>
                     </div>
                   </div>
                 </div>
-              <% } %>
+              </div>
             <% } %>
           </div>
           <!-- SIDEBAR SMALL END -->
