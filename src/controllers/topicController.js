@@ -37,7 +37,8 @@ module.exports = {
       let newTopic = {
         title: req.body.title,
         description: req.body.description,
-        img: req.body.img || null
+        img: req.body.img || null,
+        userId: req.user.id
       };
       topicQueries.addTopic(newTopic, (err, topic) => {
         if(err){

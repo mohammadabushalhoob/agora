@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     img: {
       type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: 'https://images.unsplash.com/photo-1536084006720-6c105926e135?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=446608b2f1c1338e947c246ad16a4988&auto=format&fit=crop&w=2250&q=80'
+      defaultValue: 'https://www.qualiscare.com/wp-content/uploads/2017/08/default-user.png'
     }
   }, {});
 
@@ -44,6 +44,11 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(models.Favorite, {
       foreignKey: 'userId',
       as: 'favorites'
+    });
+
+    User.hasMany(models.Topic, {
+      foreignKey: 'userId',
+      as: 'topics'
     });
 
   };

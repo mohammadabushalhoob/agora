@@ -2,6 +2,7 @@ const Topic = require('./models').Topic;
 const Post = require('./models').Post;
 const Comment = require('./models').Comment;
 const Authorizer = require('../policies/topic');
+const User = require('./models').User;
 
 module.exports = {
 
@@ -23,7 +24,8 @@ module.exports = {
     return Topic.create({
       title: newTopic.title,
       description: newTopic.description,
-      img: newTopic.img
+      img: newTopic.img,
+      userId: newTopic.userId
     })
     .then((topic) => {
       callback(null, topic)
@@ -34,14 +36,19 @@ module.exports = {
   },
   getTopic(id, callback){
     return Topic.findById(id, {
-      include:[{
-        model: Post,
-        as: 'posts',
-        include: [{
-          model: Comment,
-          as: 'comments'
-        }]
-      }]
+      include:[
+        {
+          model: Post,
+          as: 'posts',
+          include: [{
+            model: Comment,
+            as: 'comments'
+          }]
+        },
+        {
+          model: User,
+        }
+    ]
     })
     .then((topic) => {
       callback(null, topic);

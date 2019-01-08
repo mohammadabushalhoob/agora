@@ -1,4 +1,5 @@
 const User = require('./models').User;
+const Topic = require('./models').Topic;
 const Post = require('./models').Post;
 const Comment = require('./models').Comment;
 const Favorite = require('./models').Favorite;
@@ -29,21 +30,25 @@ module.exports = {
         callback(404);
       } else {
         result['user'] = user;
-        Post.scope({method: ['lastFiveFor', id]}).all()
-        .then((posts) => {
-          result['posts'] = posts;
-          Comment.scope({method: ['lastFiveFor', id]}).all()
-          .then((comments) => {
-            result['comments'] = comments;
-            Favorite.scope({method: ['favoritePosts', id]}).all()
-            .then((favoritePosts) => {
-              result['favoritePosts'] = favoritePosts;
-              callback(null, result);
+        Topic.scope({method: ['lastFiveFor', id]}).all()
+        .then((topics) => {
+          result['topics'] = topics;
+          Post.scope({method: ['lastFiveFor', id]}).all()
+          .then((posts) => {
+            result['posts'] = posts;
+            Comment.scope({method: ['lastFiveFor', id]}).all()
+            .then((comments) => {
+              result['comments'] = comments;
+              Favorite.scope({method: ['favoritePosts', id]}).all()
+              .then((favoritePosts) => {
+                result['favoritePosts'] = favoritePosts;
+                callback(null, result);
+              });
             });
-          })
-          .catch((err) => {
-            callback(err);
           });
+        })
+        .catch((err) => {
+          callback(err);
         });
       }
     });
