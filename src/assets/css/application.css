@@ -59,9 +59,35 @@ body main {
   margin-left: 50px;
 }
 
+.post-title {
+  max-width: 500px;
+}
+
+.post-description {
+  max-width: 500px;
+}
+
+.post-url {
+  max-width: 500px;
+}
+
 /* Card */
 
 .card .btn {
   width: 100%;
   margin-bottom: 10px;
+}
+
+/* Topic */
+
+.topic-title {
+  max-width: 500px;
+}
+
+.topic-description {
+  max-width: 500px;
+}
+
+.topic-url {
+  max-width: 500px;
 }
