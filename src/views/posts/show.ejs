@@ -33,7 +33,7 @@
                 <div class="card">
                   <div class="card-body">
                     <% if(post.img) { %>
-                      <img src="<%= post.img %>" class="figure-img img-fluid rounded" alt="Post Profile Picture" style="height: 500px;">
+                      <img src="<%= post.img %>" class="figure-img img-fluid rounded card-image" alt="Post Profile Picture" style="height: 500px;">
                     <% } %>
                     <p class="card-subtitle mb-2 text-muted text-center">Topic: <a href="/topics/<%= post.Topic.id %>"><%= post.Topic.title %></p></a>
                     <p class="card-subtitle mb-2 text-muted text-center">Created At: <%= post.createdAt.toString().substring(4, 15) %></p>

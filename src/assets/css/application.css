@@ -78,6 +78,14 @@ body main {
   margin-bottom: 10px;
 }
 
+.card-image {
+  max-height: 500px;
+  /* max-width: 300px; */
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* Topic */
 
 .topic-title {

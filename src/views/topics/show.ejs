@@ -30,7 +30,7 @@
                 <div class="card">
                   <div class="card-body">
                     <% if(topic.img) { %>
-                      <img src="<%= topic.img %>" class="figure-img img-fluid rounded" alt="Topic Profile Picture" style="height: 500px;">
+                      <img src="<%= topic.img %>" class="figure-img img-fluid rounded card-image" alt="Topic Profile Picture" style="height: 500px;">
                     <% } %>
                     <p class="card-subtitle mb-2 text-muted text-center">Created At: <%= topic.createdAt.toString().substring(4, 15) %></p>
                     <% if(topic.posts.length !== 0) { %>
