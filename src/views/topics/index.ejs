@@ -105,9 +105,7 @@
                   <div class="card text-center">
                     <div class="card-body">
                       <a class="btn btn-primary" href="/users/<%= currentUser.id %>">View my profile</a>
-                        <% if(currentUser.isAdmin()) { %>
-                          <a href="/topics/new" class="btn btn-success">New Topic</a>
-                        <% } %>
+                      <a href="/topics/new" class="btn btn-success">New Topic</a>
                     </div>
                   </div>
                 </div>
@@ -204,17 +202,15 @@
               </div>
             </div>
           <% } else { %>
-            <% if(currentUser.isAdmin()) { %>
-              <div class="row">
-                <div class="col-12">
-                  <div class="card text-center">
-                    <div class="card-body">
-                        <a href="/topics/new" class="btn btn-success">New Topic</a>
-                    </div>
+            <div class="row">
+              <div class="col-12">
+                <div class="card text-center">
+                  <div class="card-body">
+                      <a href="/topics/new" class="btn btn-success">New Topic</a>
                   </div>
                 </div>
               </div>
-            <% } %>
+            </div>
             <div class="row">
               <div class="col-12">
                 <ul class="nav nav-tabs" id="myTab" role="tablist" style="background-color: white;">
