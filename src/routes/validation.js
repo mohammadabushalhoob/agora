@@ -16,7 +16,7 @@ module.exports = {
 
   validateTopics(req, res, next){
     if(req.method === 'POST'){
-      req.checkBody('title').custom(value => !/\s/.test(value)).withMessage('No spaces are allowed in the username');
+      req.checkBody('title').custom(value => !/\s/.test(value)).withMessage('No spaces are allowed in the title');
       req.checkBody('description', 'must be at least 10 characters in length').isLength({min: 10});
     }
     const errors = req.validationErrors();
