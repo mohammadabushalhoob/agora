@@ -35,7 +35,7 @@ module.exports = {
     })
   },
   getTopic(id, callback){
-    return Topic.findById(id, {
+    return Topic.findByPk(id, {
       include:[
         {
           model: Post,
@@ -58,7 +58,7 @@ module.exports = {
     })
   },
   deleteTopic(req, callback){
-    return Topic.findById(req.params.id)
+    return Topic.findByPk(req.params.id)
     .then((topic) => {
       const authorized = new Authorizer(req.user, topic).destroy();
 
@@ -77,7 +77,7 @@ module.exports = {
     });
   },
   updateTopic(req, updatedTopic, callback){
-    return Topic.findById(req.params.id)
+    return Topic.findByPk(req.params.id)
     .then((topic) => {
       if(!topic){
         return callback('Topic not found');

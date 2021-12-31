@@ -72,7 +72,7 @@ describe('routes : favorites', () => {
                     favCountBeforeCreate = favorites.length;
                     request.post(options,
                         (err, res, body) => {
-                            Favorite.all()
+                            Favorite.findAll()
                             .then((favorite) => {
                                 expect(favCountBeforeCreate).toBe(favorite.length);
                                 done();

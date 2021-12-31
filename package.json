@@ -7,6 +7,9 @@
     "test": "export NODE_ENV=test && jasmine",
     "start": "node src/server.js"
   },
+  "engines": {
+    "node": "12.x"
+  },
   "author": "",
   "license": "ISC",
   "devDependencies": {

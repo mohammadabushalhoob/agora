@@ -24,22 +24,22 @@ module.exports = {
 
   getUser(id, callback){
     let result = {};
-    User.findById(id)
+    User.findByPk(id)
     .then((user) => {
       if(!user){
         callback(404);
       } else {
         result['user'] = user;
-        Topic.scope({method: ['lastFiveFor', id]}).all()
+        Topic.scope({method: ['lastFiveFor', id]}).findAll()
         .then((topics) => {
           result['topics'] = topics;
-          Post.scope({method: ['lastFiveFor', id]}).all()
+          Post.scope({method: ['lastFiveFor', id]}).findAll()
           .then((posts) => {
             result['posts'] = posts;
-            Comment.scope({method: ['lastFiveFor', id]}).all()
+            Comment.scope({method: ['lastFiveFor', id]}).findAll()
             .then((comments) => {
               result['comments'] = comments;
-              Favorite.scope({method: ['favoritePosts', id]}).all()
+              Favorite.scope({method: ['favoritePosts', id]}).findAll()
               .then((favoritePosts) => {
                 result['favoritePosts'] = favoritePosts;
                 callback(null, result);
